@@ -1,0 +1,379 @@
+WindowManager:
+    StartWindow:
+    CamWindow:
+    TypeScan:
+    History:
+    Favourites:
+    DataWindow:
+
+<StartWindow>:
+    name: "Menu"
+
+    GridLayout: # here we will deal with cols and rows
+        cols : 1
+        GridLayout:
+            rows: 3
+            Image:
+                source: 'ANNE1.png'
+            Label:
+                text: 'Thank you for using ANNE'
+                font_size:40
+                color: 0,0,0,1
+
+            BoxLayout:
+                size_hint: .2 , .2
+                spacing: 50
+
+                Button:
+                    text: "typescan"
+                    #size_hint: 0.25, 0.25
+                    pos_hint: {"x": 0.4, "y": 0.3}
+                    on_release:
+                        app.root.current = "typescan"
+                        root.manager.transition.direction = "left"
+
+                Button:
+                    text: "scan"
+                    #size_hint: 0.25, 0.25
+                    pos_hint: {"x": 0.4, "y": 0.3}
+                    on_release:
+                        app.root.current = "cam"
+                        root.manager.transition.direction = "left"
+        #Spinner:
+            #id: my_spinner
+            #text: "nav"
+            #values: ("history", "favourites")
+            #on_text:
+                #if my_spinner.text == "history": app.root.current = "history"
+                #elif my_spinner.text == "favourites": app.root.current = "favourites"
+
+
+        GridLayout:
+            cols:3
+            size_hint: 1, 0.11
+            Button:
+
+                text: "History"
+                on_release:
+                    app.root.current = "history"
+                    root.manager.transition.direction = "left"
+            Button:
+                text: "Home"
+                on_release:
+                    app.root.current = "Menu"
+                    root.manager.transition.direction = "left"
+
+
+            Button:
+                text: "Favourites"
+                on_release:
+                    app.root.current = "favourites"
+                    root.manager.transition.direction = "left"
+
+<CamWindow>:
+    name: "cam"
+    GridLayout:
+        #orientation: 'vertical'
+        rows: 4
+
+        Label:
+            size_hint: 1, 0.2
+            id: frame_counter
+            font_size: self.height * 0.4
+            text: ''
+
+        AndroidCamera:
+                index: 0
+                id: a_cam
+                resolution: self.camera_resolution
+                allow_stretch: True
+                play: True
+                canvas.before:
+                    PushMatrix
+                    Rotate:
+                        angle: 0
+                        origin: self.center
+                    Scale:
+                        x: self.cam_ratio
+                        y: self.cam_ratio
+                        origin: self.center
+                canvas.after:
+                    PopMatrix
+
+        BoxLayout:
+            #size_hint_y: None
+            #height: 48
+            size_hint: 0.25, 0.25
+            pos_hint: {"x": 0.4, "y": 0.3}
+            Button:
+                text: "Info"
+                on_press: root.get_value_from_book()
+
+                on_release:
+
+                    app.root.current = "data"
+                    root.manager.transition.direction = "left"
+                    #root.stop()
+
+        GridLayout:
+            cols:3
+            size_hint: 1, 0.11
+            Button:
+
+                text: "History"
+                on_release:
+                    app.root.current = "history"
+                    root.manager.transition.direction = "left"
+            Button:
+                text: "Home"
+                on_release:
+                    app.root.current = "Menu"
+                    root.manager.transition.direction = "left"
+
+
+            Button:
+                text: "Favourites"
+                on_release:
+                    app.root.current = "favourites"
+                    root.manager.transition.direction = "left"
+
+<TypeScan>:
+    name: "typescan"
+    GridLayout: # here we will deal with cols and rows
+        cols : 1
+        GridLayout:
+            rows: 3
+
+
+            Label:
+                text: 'Enter the GTIN manually'
+                font_size:30
+                color: 0,0,0,1
+
+            TextInput:
+                id: entered_value
+                hint_text: "GTIN"
+                font_size:25
+                size_hint: (.2, None)
+                height: 40
+
+            Button:
+                text: "Info"
+                font_size: 22
+                size_hint:(0.1,0.15)
+                on_press: root.get_value_from_book()
+                on_release:
+
+                    app.root.current = "data"
+                    root.manager.transition.direction = "left"
+        GridLayout:
+            cols:3
+            size_hint: 1, 0.11
+            Button:
+
+                text: "History"
+                on_release:
+                    app.root.current = "history"
+                    root.manager.transition.direction = "left"
+            Button:
+                text: "Home"
+                on_release:
+                    app.root.current = "Menu"
+                    root.manager.transition.direction = "left"
+
+
+            Button:
+                text: "Favourites"
+                on_release:
+                    app.root.current = "favourites"
+                    root.manager.transition.direction = "left"
+
+
+<History>:
+    name: "history"
+
+    Label:
+        text: 'History'
+        background_color: (0.8, 0.8, 0.8, 0.8)
+        size_hint: 1, 0.1
+        pos_hint: {"x": 0.0, "y": 0.9}
+        font_size:30
+        color: 0.1,0.3,0.3,1
+        canvas.before:
+            Color:
+                rgba: self.background_color
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+
+
+
+
+
+    GridLayout:
+        cols:3
+        size_hint: 1, 0.11
+        Button:
+
+            text: "History"
+            on_release:
+                app.root.current = "history"
+                root.manager.transition.direction = "left"
+        Button:
+            text: "Home"
+            on_release:
+                app.root.current = "Menu"
+                root.manager.transition.direction = "left"
+
+
+        Button:
+            text: "Favourites"
+            on_release:
+                app.root.current = "favourites"
+                root.manager.transition.direction = "left"
+
+
+<Favourites>:
+    name: "favourites"
+
+    Label:
+        text: 'Favourites'
+        background_color: (0.8, 0.8, 0.8, 0.8)
+        size_hint: 1, 0.1
+        pos_hint: {"x": 0.0, "y": 0.9}
+        font_size:30
+        color: 0.1,0.3,0.3,1
+        canvas.before:
+            Color:
+                rgba: self.background_color
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+
+
+    GridLayout:
+        cols:3
+        size_hint: 1, 0.11
+        Button:
+
+            text: "History"
+            on_release:
+                app.root.current = "history"
+                root.manager.transition.direction = "left"
+        Button:
+            text: "Home"
+            on_release:
+                app.root.current = "Menu"
+                root.manager.transition.direction = "left"
+
+
+        Button:
+            text: "Favourites"
+            on_release:
+                app.root.current = "favourites"
+                root.manager.transition.direction = "left"
+
+
+
+<DataWindow>:
+    name: "data"
+    GridLayout: # here we will deal with cols and rows
+        cols : 1
+        GridLayout:
+            rows: 3
+
+
+
+
+            Label:
+                id: product_name
+                text: 'Product name is: '
+                font_size: 28
+                color: 0,0,0,1
+
+            Label:
+                id: score
+                text: 'Score'
+                color: 0,0,0,1
+                font_size: 28
+
+            Label:
+                id: score_progress_bar
+                text:''
+                color: (0,0,0,1)
+
+                size_hint: None, None
+                width: 150
+                height: 150
+
+                progress: 0
+
+                pos_hint: {'center_x': .5, 'center_y': .6}
+
+                canvas.before:
+                    Color:
+                        rgba:(0.6, 0.6 , 0.6, 1)
+                    Ellipse:
+                        size: self.size
+                        pos: self.pos
+
+
+
+                    Color:
+                        #rgba:(0, 0 ,1, 1)
+                        rgba: root.bar_color
+                    Ellipse:
+                        size: self.size
+                        pos: self.pos
+                        angle_end: self.progress
+
+
+
+
+                    Color:
+                        rgba:(0.6, 0.6 , 0.6, 1)
+                    Ellipse:
+                        size: [self.width - 30 , self.height -30]
+                        pos: [(self.center_x - (self.width - 30) / 2) , ( self.center_y - (self.height -30) / 2 )]
+
+
+
+        ScrollView:
+            do_scroll_y: True
+            do_scroll_x: False
+            Label:
+                id:sc_lab
+                text: ''
+                size_hint: None, None
+                size: self.texture_size
+                #height: 200
+                #text_size: self.width, None
+                color: 0,0,0,1
+                font_size: 22
+
+
+        GridLayout:
+            cols:3
+            size_hint: 1, 0.11
+            Button:
+
+                text: "History"
+                on_release:
+                    app.root.current = "history"
+                    root.manager.transition.direction = "left"
+            Button:
+                text: "Home"
+                on_release:
+                    app.root.current = "Menu"
+                    root.manager.transition.direction = "left"
+
+
+            Button:
+                text: "Favourites"
+                on_release:
+                    app.root.current = "favourites"
+                    root.manager.transition.direction = "left"
+
+

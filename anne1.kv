@@ -1,0 +1,384 @@
+WindowManager:
+    StartWindow:
+    CamWindow:
+    TypeScan:
+    History:
+    Favourites:
+    DataWindow:
+
+<StartWindow>:
+    name: 'menu'
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            title: "Welcome to ANNE!"   #title: "Choose Scanning Method"
+
+        #MDBoxLayout:  this shit will put a column on the left side of the screen with rgba = 100 0.5
+            #size_hint: .5, 1
+            #MDCard:
+                #md_bg_color: 1, 0, 0, .5
+
+        MDLabel:
+            text: "Search for GTIN:"            #text: "Welcome to ANNE"
+            pos_hint: {'center_x': .5, 'center_y': .35}
+            halign: 'center'
+            valign: 'middle'
+            theme_text_color: "Primary"
+            font_style: "H5"
+
+        Image:
+            source: 'ANNE1.jpg'
+
+        MDFloatLayout:
+
+            MDRaisedButton:
+                text: "  Using Camera  "
+                #pos_hint: {'top': 1, 'right': .5 }
+                pos_hint: { 'center_x': .5, 'center_y': .6}
+                #halign: 'left'
+                #valign: 'center'
+                size_hint: None, None
+                #height: dp(200)
+                #size: 60, 30
+                width: dp(200) + (self.ids.lbl_txt.texture_size[0] - self.ids.lbl_txt.texture_size[0])
+                #pos : (300, 200)
+                #id: something
+                on_press:
+                    #app.show_date_picker()  this shit will get its instruction from a function built in the App class
+                    root.manager.current = 'cam'
+                    root.manager.transition.direction = 'left'
+
+
+            MDRaisedButton:
+                text: "     Manually     "
+                pos_hint: {'center_x': .5, 'center_y': .9}
+                size_hint: None, None
+                width: dp(200) + (self.ids.lbl_txt.texture_size[0] - self.ids.lbl_txt.texture_size[0])
+                #height: dp(200)
+                on_press:
+                    root.manager.current = 'typescan'
+                    root.manager.transition.direction = 'left'
+
+
+        MDBottomAppBar:
+            title: "Navigation"
+            MDTopAppBar:
+                title: "Navigation"
+                #icon: "git"
+                type: "bottom"
+                right_action_items: [["heart", lambda x: root.manager.change_screen("favourites")], ["home", lambda x: root.manager.change_screen("menu")], ["history", lambda x: root.manager.change_screen("history")]]
+
+
+<CamWindow>:
+    name: 'cam'
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        #MDBottomAppBar:
+            #title: "Click on the Arrow to scan "
+            #right_action_items: [["arrow-right", lambda x: root.manager.change_screen("data")]]
+
+
+        ScanAnalyze:
+            id: preview
+            aspect_ratio: '16:9'
+            extracted_data:
+                root.got_result
+            BoxLayout: #if the app stopped working on phone just remove the box and keep the button and do not forget to giv the button a text do no keep it empty
+                orientation: 'vertical'
+                Button:
+                    text: "   "
+                    background_color : 0,0,0,0
+                    #pos: 500, 50
+                    #size_hint: None, None
+                    #size_hint_y: None
+                    pos_hint: {"x": 0.1, "y": 0.2}
+                    #width: dp(300) + (self.ids.lbl_txt.texture_size[0] - self.ids.lbl_txt.texture_size[0])
+                    #height: 50
+                    #valign: 'bottom'
+
+                    on_press: root.get_value_from_book()
+                    on_release:
+                        root.manager.current = 'data'
+                        root.manager.transition.direction = 'left'
+
+
+
+        MDLabel:
+            size_hint_y: None
+            height:'130dp'
+            id:ti
+
+
+
+
+
+<TypeScan>:
+    name: 'typescan'
+    MDBoxLayout:
+        orientation: "vertical"
+        #spacing: 120
+
+        MDTopAppBar:
+            title: "Enter GTIN Manually"
+
+        MDLabel:
+            text: "Search for a GTIN"
+            pos_hint: {'center_x': .5, 'center_y': .8}
+            halign: 'center'
+            valign: 'middle'
+            theme_text_color: "Primary"
+            font_style: "H6"
+
+        MDBoxLayout:
+            orientation: "vertical"
+            pos_hint: {'center_x': .5, 'center_y': .8}
+            size_hint: 0.8, 0.5
+
+            MDTextField:
+                id: entered_value
+                pos_hint: {'center_x': .5, 'center_y': 0.65}
+                valign: 'middle'
+                hint_text: "Enter a GTIN here"
+                color_mode: 'accent'
+                mode: "fill"
+                fill_color: 159/255, 197/255, 232/255, 1
+                font_size: 32
+                #halign: 'center'
+                size_hint: 0.6, 0.1
+
+
+
+            MDRaisedButton:
+                text: "     get info    "
+                pos_hint: {'center_x': .5, 'center_y': .8}
+                size_hint: None, None
+                width: dp(200) + (self.ids.lbl_txt.texture_size[0] - self.ids.lbl_txt.texture_size[0])
+                #height: dp(200)
+                on_press: root.get_value_from_book()
+                on_release:
+                    root.manager.current = 'data'
+                    root.manager.transition.direction = 'left'
+
+
+        MDBottomAppBar:
+            title: "Navigation"
+            MDTopAppBar:
+                title: "Navigation"
+                #icon: "git"
+                type: "bottom"
+                right_action_items: [["heart", lambda x: root.manager.change_screen("favourites")], ["home", lambda x: root.manager.change_screen("menu")], ["history", lambda x: root.manager.change_screen("history")]]
+
+
+
+<History>:
+    name: 'history'
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "History"
+            right_action_items: [["refresh", lambda x: root.getData()]]
+
+
+        MDLabel:
+            text: "list of your history"
+            pos_hint: {'center_x': .5, 'center_y': .9}
+            halign: 'center'
+            valign: 'top'
+            theme_text_color: "Primary"
+            font_style: "H6"
+
+
+
+        ScrollView:
+            do_scroll_y: True
+            do_scroll_x: False
+            Label:
+                id: old_history
+                text: ''
+
+                size_hint: None, None
+                size: self.texture_size
+                #height: 200
+                #text_size: self.width, None
+                color: 0,0,0,1
+                font_size: 48
+
+
+        MDBottomAppBar:
+            title: "Navigation"
+            MDTopAppBar:
+                title: "Navigation"
+                #icon: "git"
+                type: "bottom"
+                right_action_items: [["heart", lambda x: root.manager.change_screen("favourites")], ["home", lambda x: root.manager.change_screen("menu")], ["history", lambda x: root.manager.change_screen("history")]]
+
+
+<Favourites>:
+    name: 'favourites'
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Favourites Products"
+            right_action_items: [["refresh", lambda x: root.getData()]]
+
+
+        MDLabel:
+            text: "list of your favourites:"
+            pos_hint: {'center_x': .5, 'center_y': .9}
+            halign: 'center'
+            valign: 'middle'
+            theme_text_color: "Primary"
+            font_style: "H6"
+
+        ScrollView:
+            do_scroll_y: True
+            do_scroll_x: False
+            Label:
+                id: my_favourites
+                text: ''
+
+                size_hint: None, None
+                size: self.texture_size
+                #height: 200
+                #text_size: self.width, None
+                color: 0,0,0,1
+                font_size: 48
+
+        MDBottomAppBar:
+            title: "Navigation"
+            MDTopAppBar:
+                title: "Navigation"
+                #icon: "git"
+                type: "bottom"
+                right_action_items: [["heart", lambda x: root.manager.change_screen("favourites")], ["home", lambda x: root.manager.change_screen("menu")], ["history", lambda x: root.manager.change_screen("history")]]
+
+
+
+
+
+
+<DataWindow>:
+    name: 'data'
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Info about Product"
+
+
+
+
+        GridLayout:
+            rows: 3
+
+
+
+
+            Label:
+                id: product_name
+                text: 'Product name is: '
+                font_size: 48
+                color: 0,0,0,1
+
+            Label:
+                id: score
+                text: 'Score'
+                color: 0,0,0,1
+                font_size: 38
+
+
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                #pos_hint: {'center_x': .5, 'center_y': .9}
+                #halign: "center"
+                #the next 2 lines are the las updates i added to the code
+                spacing: 40
+                padding: [180,0,50,0]
+
+                MDRaisedButton:
+                    text: "+"
+                    #pos_hint: {'center_x': .8, 'center_y': .5}
+                    #width: dp(120) + (self.ids.lbl_txt.texture_size[0] - self.ids.lbl_txt.texture_size[0])
+                    on_press: root.add_to_favourites()
+
+
+                Label:
+                    id: score_progress_bar
+                    text:''
+                    color: (0,0,0,1)
+
+                    size_hint: None, None
+                    width: 50
+                    height: 50
+
+                    progress: 0
+
+                    pos_hint: {'center_x': .5, 'center_y': .6}
+
+                    canvas.before:
+                        Color:
+                            rgba:(0.6, 0.6 , 0.6, 1)
+                        Ellipse:
+                            size: [self.width + 80 , self.height +80]
+                            pos: self.pos
+
+
+
+                        Color:
+                            #rgba:(0, 0 ,1, 1)
+                            rgba: root.bar_color
+                        Ellipse:
+                            size: [self.width + 80 , self.height +80]
+                            pos: self.pos
+                            angle_end: self.progress
+
+
+
+
+                        Color:
+                            rgba:(0.8, 0.8 , 0.8, 1)
+                        Ellipse:
+                            size: [self.width + 50 , self.height +50]
+                            pos: [(self.center_x - (self.width - 30) / 2) , ( self.center_y - (self.height -30) / 2 )]
+                            #pos: [(0.5 - (self.width - 30) / 2) , ( 0.5 - (self.height -30) / 2 )]
+
+
+                MDRaisedButton:
+                    text: "-"
+                    #pos_hint: {'center_x': .2, 'center_y': .5}
+                    #width: dp(120) + (self.ids.lbl_txt.texture_size[0] - self.ids.lbl_txt.texture_size[0])
+                    on_press: root.remove_from_favourites()
+
+        ScrollView:
+            do_scroll_y: True
+            do_scroll_x: False
+            Label:
+                id:sc_lab
+                text: ''
+
+                size_hint: None, None
+                size: self.texture_size
+                #height: 200
+                #text_size: self.width, None
+                color: 0,0,0,1
+                font_size: 40
+                markup: True
+                on_ref_press:
+                    import webbrowser
+                    webbrowser.open(args[1])
+
+
+
+
+        MDBottomAppBar:
+            title: "Navigation"
+            MDTopAppBar:
+                title: "Navigation"
+                #icon: "git"
+                type: "bottom"
+                right_action_items: [["heart", lambda x: root.manager.change_screen("favourites")], ["home", lambda x: root.manager.change_screen("menu")], ["history", lambda x: root.manager.change_screen("history")]]
+
